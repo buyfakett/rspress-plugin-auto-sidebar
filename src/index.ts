@@ -142,7 +142,7 @@ function listFilesInDirectory(
     });
 
     // 移除 isOverview 属性，只保留必要字段
-    const processedItems = allItems.map(({ isOverview, ...item }) => item);
+    const processedItems = allItems.map(({ isOverview, sort, ...item }) => item);
     array.push(...processedItems);
 
 }
