@@ -118,26 +118,23 @@ function listFilesInDirectory(
     // 3. sort 字段值小的排在前面
     // 4. 没有 sort 字段的，保持默认顺序
     allItems.sort((a, b) => {
-        // overview 优先
-        if (a.isOverview && !b.isOverview) {
-            return -1;
+        // 1. overview 优先
+        if (a.isOverview !== b.isOverview) {
+            return a.isOverview ? -1 : 1;
         }
-        if (!a.isOverview && b.isOverview) {
-            return 1;
-        }
-        // 都为 overview 或都不为 overview，按 sort 字段排序
-        // 有 sort 字段的排在前面
-        if (a.sort !== undefined && b.sort === undefined) {
-            return -1;
-        }
-        if (a.sort === undefined && b.sort !== undefined) {
-            return 1;
-        }
-        // 都有 sort 字段，按值排序
+
+        // 2. 按 sort 字段排序
         if (a.sort !== undefined && b.sort !== undefined) {
             return a.sort - b.sort;
         }
-        // 都没有 sort 字段，保持默认顺序
+        if (a.sort !== undefined) {
+            return -1;
+        }
+        if (b.sort !== undefined) {
+            return 1;
+        }
+
+        // 3. 都没有 sort 字段，保持默认顺序
         return 0;
     });
 
