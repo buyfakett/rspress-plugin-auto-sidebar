@@ -75,3 +75,4 @@ export default defineConfig({
 1. **自动生成侧边栏**：自动读取 `scanDir` 对应路径（如 `docs/guide`）下的所有文档文件，生成 `text` 和 `link` 的平铺侧边栏列表项目。不会添加多余的一层嵌套父级。
 2. **支持 Overview 排序**：自动解析 Markdown Frontmatter，如果该文件内包含 `overview: true`，会被优先排在页面的最上方。
 3. **提取 Title**：如果文件包含 `title: xxx` 的 Frontmatter，会自动用作侧边栏的文本展示名称，否则自动退化使用文件名。
+4. **支持 Sort 排序**：如果文件包含 `sort: number` 的 Frontmatter，会按照数字大小排序，数值越小越靠前。有 `sort` 字段的文件会排在没有 `sort` 字段的文件前面。
