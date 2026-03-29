@@ -92,9 +92,10 @@ function listFilesInDirectory(
             let sort: number | undefined;
             try {
                 const parsed = matter(content);
-                title = (parsed.data as any).title || '';
-                isOverview = (parsed.data as any).overview === true;
-                sort = (parsed.data as any).sort;
+                const { title: rawTitle, overview, sort: rawSort } = parsed.data;
+                title = typeof rawTitle === 'string' ? rawTitle : '';
+                isOverview = overview === true;
+                sort = typeof rawSort === 'number' ? rawSort : undefined;
             } catch {
                 // 忽略 frontmatter 错误
             }
