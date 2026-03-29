@@ -1,6 +1,6 @@
 {
   "name": "rspress-plugin-auto-sidebar",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Rspress plugin to auto-generate sidebar from navbar scanDir fields",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,7 +28,7 @@
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.19.35",
+    "@types/node": "^20.19.37",
     "typescript": "^5.9.3"
   },
   "files": [

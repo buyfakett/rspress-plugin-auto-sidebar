@@ -73,8 +73,7 @@ function listFilesInDirectory(
     }
 
     const items = fs.readdirSync(directoryPath);
-    const normalItems: { text: string; link: string }[] = [];
-    const overviewItems: { text: string; link: string }[] = [];
+    const allItems: { text: string; link: string; sort?: number; isOverview: boolean }[] = [];
 
     for (const item of items) {
         if (item.startsWith('_') || item.startsWith('.')) continue;
@@ -90,10 +89,13 @@ function listFilesInDirectory(
 
             let title = '';
             let isOverview = false;
+            let sort: number | undefined;
             try {
                 const parsed = matter(content);
-                title = (parsed.data as any).title || '';
-                isOverview = (parsed.data as any).overview === true;
+                const { title: rawTitle, overview, sort: rawSort } = parsed.data;
+                title = typeof rawTitle === 'string' ? rawTitle : '';
+                isOverview = overview === true;
+                sort = typeof rawSort === 'number' ? rawSort : undefined;
             } catch {
                 // 忽略 frontmatter 错误
             }
@@ -103,18 +105,34 @@ function listFilesInDirectory(
             const sidebarItem = {
                 text: title || fileName,
                 link: linkPath,
+                sort,
+                isOverview,
             };
 
-            if (isOverview) {
-                overviewItems.push(sidebarItem);
-            } else {
-                normalItems.push(sidebarItem);
-            }
+            allItems.push(sidebarItem);
         }
     }
 
-    // overview 优先
-    array.push(...overviewItems, ...normalItems);
+    // 按优先级排序：
+    // 1. overview 排在最前面
+    // 2. 有 sort 字段的排在前面
+    // 3. sort 字段值小的排在前面
+    // 4. 没有 sort 字段的，保持默认顺序
+    allItems.sort((a, b) => {
+        // 1. overview 优先 (true 在前)
+        const overviewSort = Number(b.isOverview) - Number(a.isOverview);
+        if (overviewSort !== 0) {
+            return overviewSort;
+        }
+
+        // 2. 按 sort 字段排序 (undefined 值视为无穷大，排在后面)
+        return (a.sort ?? Infinity) - (b.sort ?? Infinity);
+    });
+
+    // 移除 isOverview 属性，只保留必要字段
+    const processedItems = allItems.map(({ isOverview, sort, ...item }) => item);
+    array.push(...processedItems);
+
 }
 
 export function generateSidebarFromNavbar(
