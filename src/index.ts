@@ -38,25 +38,27 @@ interface ScanEntry {
 function collectScanEntries(navbarItems: AutoSidebarNavItem[], defaultReverse: boolean): ScanEntry[] {
     const entries: ScanEntry[] = [];
 
-    const traverse = (items: AutoSidebarNavItem[]) => {
+    const traverse = (items: AutoSidebarNavItem[], inheritedReverse: boolean) => {
         for (const item of items) {
+            const currentReverse = item.reverse ?? inheritedReverse;
+
             if (item.items && item.items.length > 0) {
-                traverse(item.items as AutoSidebarNavItem[]);
+                traverse(item.items as AutoSidebarNavItem[], currentReverse);
             } else if (item.children && item.children.length > 0) {
-                traverse(item.children as AutoSidebarNavItem[]);
+                traverse(item.children as AutoSidebarNavItem[], currentReverse);
             }
 
             if (item.scanDir) {
                 entries.push({
                     scanDir: item.scanDir,
-                    reverse: item.reverse ?? defaultReverse,
+                    reverse: currentReverse,
                 });
             }
         }
     };
 
     if (navbarItems && navbarItems.length > 0) {
-        traverse(navbarItems);
+        traverse(navbarItems, defaultReverse);
     }
     return entries;
 }
