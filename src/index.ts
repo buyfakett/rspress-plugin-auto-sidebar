@@ -136,11 +136,8 @@ function listFilesInDirectory(
         }
 
         // 2. 按 sort 字段排序，undefined 始终排在最后
-        if (a.sort === undefined && b.sort === undefined) {
-            return 0;
-        }
         if (a.sort === undefined) {
-            return 1;
+            return b.sort === undefined ? 0 : 1;
         }
         if (b.sort === undefined) {
             return -1;
