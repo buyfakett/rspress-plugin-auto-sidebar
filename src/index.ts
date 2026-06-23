@@ -32,6 +32,7 @@ export interface AutoSidebarOptions {
 
 interface ScanEntry {
     scanDir: string;
+    text?: string;
     reverse: boolean;
 }
 
@@ -51,6 +52,7 @@ function collectScanEntries(navbarItems: AutoSidebarNavItem[], defaultReverse: b
             if (item.scanDir) {
                 entries.push({
                     scanDir: item.scanDir,
+                    text: item.text,
                     reverse: currentReverse,
                 });
             }
