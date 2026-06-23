@@ -25,6 +25,7 @@ import { pluginAutoSidebar } from 'rspress-plugin-auto-sidebar';
 export default defineConfig({
   plugins: [
     pluginAutoSidebar({
+      reverse: true, // 可选：全局默认按 sort 降序
       navbar: [
         {
           text: '指南',
@@ -61,6 +62,7 @@ export default defineConfig({
           text: '指南',
           link: '/guide/',
           scanDir: '/guide/',
+          reverse: true, // 可选：当前导航项覆盖全局排序方向
        }
     ],
   },
@@ -76,3 +78,23 @@ export default defineConfig({
 2. **支持 Overview 排序**：自动解析 Markdown Frontmatter，如果该文件内包含 `overview: true`，会被优先排在页面的最上方。
 3. **提取 Title**：如果文件包含 `title: xxx` 的 Frontmatter，会自动用作侧边栏的文本展示名称，否则自动退化使用文件名。
 4. **支持 Sort 排序**：如果文件包含 `sort: number` 的 Frontmatter，会按照数字大小排序，数值越小越靠前。有 `sort` 字段的文件会排在没有 `sort` 字段的文件前面。
+5. **支持反向 Sort 排序**：可通过 `pluginAutoSidebar({ reverse: true })` 设置全局默认降序，也可在单个 `scanDir` 导航项上通过 `reverse: true` 覆盖全局配置。启用后会按 `sort` 降序排列，`sort` 未定义的页面仍排在最后。
+
+## API
+
+```ts
+export interface AutoSidebarNavItem {
+  text: string;
+  link?: string;
+  items?: AutoSidebarNavItem[];
+  children?: AutoSidebarNavItem[];
+  scanDir?: string;
+  reverse?: boolean;
+}
+
+export interface AutoSidebarOptions {
+  navbar?: AutoSidebarNavItem[];
+  docsDir?: string;
+  reverse?: boolean;
+}
+```
